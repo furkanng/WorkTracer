@@ -72,47 +72,20 @@ class CustomerController extends Controller
     public function storeTransaction(Request $request, Customer $customer)
     {
         $validated = $request->validate([
-            'type' => 'required|in:debt,payment',
+            'type' => 'required|in:payment,debt',
             'amount' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
-            'price_id' => 'required_if:type,debt|nullable|exists:price_lists,id',
-            'quantity' => 'required_if:type,debt|nullable|numeric|min:0'
+            'document_no' => 'nullable|string|max:255',
+            'description' => 'nullable|string'
         ]);
 
-        $transaction = new Transaction();
-        $transaction->customer_id = $customer->id;
-        $transaction->type = $validated['type'];
-        $transaction->amount = $validated['amount'];
-        $transaction->description = $validated['description'];
+        $validated['user_id'] = auth()->id();
 
-        if ($validated['type'] === 'debt' && isset($validated['price_id'])) {
-            $price = PriceList::findOrFail($validated['price_id']);
-            $transaction->price_id = $price->id;
-            $transaction->quantity = $validated['quantity'];
-            
-            // Fatura detaylarını description'a ekle
-            $transaction->description = sprintf(
-                "%s\nMarka: %s\nBirim Fiyat: %.2f ₺\nMiktar: %.2f %s\nToplam: %.2f ₺",
-                $price->name,
-                $price->brand ? $price->brand->name : '-',
-                $price->unit_price,
-                $validated['quantity'],
-                $price->unit,
-                $validated['amount']
-            );
-        }
+        $customer->transactions()->create($validated);
 
-        $transaction->save();
-
-        // Müşterinin bakiyesini güncelle
-        if ($validated['type'] === 'debt') {
-            $customer->balance += $validated['amount'];
-        } else {
-            $customer->balance -= $validated['amount'];
-        }
+        // Bakiyeyi güncelle
+        $customer->balance = $customer->total_debt;
         $customer->save();
 
-        return redirect()->route('secretary.customers.show', $customer)
-            ->with('success', 'İşlem başarıyla kaydedildi.');
+        return redirect()->back()->with('success', 'İşlem başarıyla kaydedildi.');
     }
 } 
