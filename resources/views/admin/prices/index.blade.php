@@ -41,7 +41,7 @@
                                 <small class="text-muted">{{ $price->description }}</small>
                             @endif
                         </td>
-                        <td>{{ $price->brand->name }}</td>
+                        <td>{{ $price->brand?->name }}</td>
                         <td>{{ number_format($price->unit_price, 2) }} ₺</td>
                         <td>{{ $price->unit }}</td>
                         <td>

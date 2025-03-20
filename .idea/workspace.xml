@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86ac93ea-d0b2-4601-979f-f4f8657a7100" name="Changes" comment="first commit">
+    <list default="true" id="86ac93ea-d0b2-4601-979f-f4f8657a7100" name="Changes" comment="refactor customer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/CustomerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/CustomerController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/Transaction.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Transaction.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2024_03_03_000006_add_price_fields_to_transactions_table.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/seeders/UserSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeders/UserSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/prices/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/prices/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/tasks/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/tasks/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/tasks/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/tasks/show.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,8 +188,17 @@
       <option name="presentableId" value="Default" />
       <updated>1740944724244</updated>
       <workItem from="1740944725680" duration="3263000" />
-      <workItem from="1741272822489" duration="1408000" />
+      <workItem from="1741272822489" duration="4988000" />
     </task>
+    <task id="LOCAL-00001" summary="refactor customer">
+      <option name="closed" value="true" />
+      <created>1741289737492</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1741289737492</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -192,6 +206,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="first commit" />
+    <MESSAGE value="refactor customer" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor customer" />
   </component>
 </project>

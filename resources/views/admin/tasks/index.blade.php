@@ -46,7 +46,7 @@
                         </td>
                         <td class="d-none d-md-table-cell">{{ $task->customer->full_name }}</td>
                         <td class="d-none d-lg-table-cell">{{ $task->technician->name }}</td>
-                        <td>{{ $task->brand->name ?? '-' }}</td>
+                        <td>{{ $task->brand?->name }}</td>
                         <td>
                             @switch($task->status)
                                 @case('pending')

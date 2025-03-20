@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
         // Admin kullanıcısı
         User::create([
             'name' => 'Admin User',
-            'email' => 'admin@example.com',
+            'email' => 'admin@admin.com',
             'password' => Hash::make('123456'),
             'role_id' => Role::where('name', 'admin')->first()->id
         ]);
@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         // Teknisyen kullanıcısı
         User::create([
             'name' => 'Teknisyen User',
-            'email' => 'teknisyen@example.com',
+            'email' => 'teknisyen@teknisyen.com',
             'password' => Hash::make('123456'),
             'role_id' => Role::where('name', 'technician')->first()->id
         ]);
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
         // Sekreter kullanıcısı
         User::create([
             'name' => 'Sekreter User',
-            'email' => 'sekreter@example.com',
+            'email' => 'sekreter@sekreter.com',
             'password' => Hash::make('123456'),
             'role_id' => Role::where('name', 'secretary')->first()->id
         ]);
