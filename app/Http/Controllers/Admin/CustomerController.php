@@ -83,35 +83,32 @@ class CustomerController extends Controller
     {
         $validated = $request->validate([
             'type' => 'required|in:debt,payment',
-            'amount' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'items' => 'required_if:type,debt|array',
-            'items.*.price_id' => 'required_if:type,debt|exists:price_lists,id',
-            'items.*.quantity' => 'required_if:type,debt|numeric|min:0'
         ]);
 
         $transaction = new Transaction();
         $transaction->customer_id = $customer->id;
         $transaction->user_id = auth()->id();
         $transaction->type = $validated['type'];
-        $transaction->amount = $validated['amount'];
+        $transaction->amount = $request->type == "debt" ? $request->total_amount : $request->amount ;
         $transaction->description = $validated['description'];
         $transaction->transaction_date = now();
         $transaction->save();
 
-        if ($validated['type'] === 'debt' && !empty($validated['items'])) {
+        if ($validated['type'] === 'debt' && !empty($request->items)) {
             // Fatura oluştur
             $invoice = new Invoice();
             $invoice->customer_id = $customer->id;
             $invoice->task_id = request('task_id'); // Eğer task detay sayfasından geliyorsa
             $invoice->transaction_id = $transaction->id;
             $invoice->invoice_no = 'INV-' . date('Ymd') . '-' . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
-            $invoice->total_amount = $validated['amount'];
+            $invoice->total_amount = $request->total_amount;
             $invoice->notes = $validated['description'];
+            $invoice->type = "debt";
             $invoice->save();
 
             // Fatura kalemleri
-            foreach ($validated['items'] as $item) {
+            foreach ($request->items as $item) {
                 $price = PriceList::findOrFail($item['price_id']);
                 $total = $price->unit_price * $item['quantity'];
 
@@ -142,9 +139,20 @@ class CustomerController extends Controller
 
         // Müşterinin bakiyesini güncelle
         if ($validated['type'] === 'debt') {
-            $customer->balance += $validated['amount'];
+            $customer->balance += $request->total_amount;
         } else {
-            $customer->balance -= $validated['amount'];
+
+            $invoice = new Invoice();
+            $invoice->customer_id = $customer->id;
+            $invoice->task_id = request('task_id'); // Eğer task detay sayfasından geliyorsa
+            $invoice->transaction_id = $transaction->id;
+            $invoice->invoice_no = 'INV-' . date('Ymd') . '-' . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
+            $invoice->total_amount = $request->amount;
+            $invoice->notes = $validated['description'];
+            $invoice->type = "payment";
+            $invoice->save();
+
+            $customer->balance -= $request->amount;
         }
         $customer->save();
 

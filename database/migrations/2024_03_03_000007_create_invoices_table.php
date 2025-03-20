@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('invoice_no')->unique();
             $table->decimal('total_amount', 10, 2);
             $table->text('notes')->nullable();
+            $table->string("type")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

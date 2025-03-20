@@ -16,7 +16,8 @@ class Invoice extends Model
         'transaction_id',
         'invoice_no',
         'total_amount',
-        'notes'
+        'notes',
+        'type'
     ];
 
     public function customer()

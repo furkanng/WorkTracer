@@ -85,7 +85,9 @@
                         <ul class="list-group mb-4">
                             @foreach($task->invoices as $invoice)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>Fatura No: {{ $invoice->invoice_no }} - Tarih: {{ $invoice->created_at->format('d.m.Y') }}</span>
+                                    <span
+                                    class="{{$invoice->type == "debt" ? "text-danger" : "text-success"}}"
+                                    >Fatura No: {{ $invoice->invoice_no }} - Tarih: {{ $invoice->created_at->format('d.m.Y') }}</span>
                                     <a href="{{ route('admin.invoices.show', $invoice) }}" class="btn btn-sm btn-outline-primary">Görüntüle</a>
                                 </li>
                             @endforeach
@@ -169,6 +171,18 @@
                     @enderror
                 </div>
 
+                <div id="paymentAmountContainer" class="col-md-6 d-none">
+                    <label for="payment_amount" class="form-label">Ödeme Tutarı <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="number" step="0.01" class="form-control @error('amount') is-invalid @enderror"
+                               id="payment_amount" name="amount" value="{{ old('amount') }}">
+                        <span class="input-group-text">₺</span>
+                    </div>
+                    @error('amount')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <div id="priceItemsContainer" class="col-12 d-none">
                     <!-- Dinamik olarak eklenecek ürün/hizmet satırları -->
                     <div class="price-items">
@@ -176,7 +190,7 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Ürün/Hizmet</label>
-                                    <select class="form-select price-select" name="items[0][price_id]" required>
+                                    <select class="form-select price-select" name="items[0][price_id]">
                                         <option value="">Seçin...</option>
                                         @foreach(\App\Models\PriceList::where('is_active', true)
                                             ->when($task->brand_id, function($query) use ($task) {
@@ -200,7 +214,7 @@
                                     <label class="form-label">Miktar</label>
                                     <div class="input-group">
                                         <input type="number" step="0.01" class="form-control quantity-input"
-                                               name="items[0][quantity]" value="1" required>
+                                               name="items[0][quantity]" value="1">
                                         <span class="input-group-text unit-text">adet</span>
                                     </div>
                                 </div>
@@ -229,7 +243,7 @@
                         <div class="col-md-3">
                             <div class="input-group">
                                 <input type="number" class="form-control" id="totalAmount"
-                                       name="amount" readonly required>
+                                       name="total_amount" readonly>
                                 <span class="input-group-text">₺</span>
                             </div>
                         </div>
@@ -258,6 +272,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const typeSelect = document.getElementById('type');
     const priceItemsContainer = document.getElementById('priceItemsContainer');
+    const paymentAmountContainer = document.getElementById('paymentAmountContainer');
     const addPriceItemBtn = document.getElementById('addPriceItem');
     const priceItems = document.querySelector('.price-items');
     let itemCount = 1;
@@ -319,8 +334,13 @@ document.addEventListener('DOMContentLoaded', function() {
     typeSelect.addEventListener('change', function() {
         if (this.value === 'debt') {
             priceItemsContainer.classList.remove('d-none');
+            paymentAmountContainer.classList.add('d-none');
+        } else if (this.value === 'payment') {
+            priceItemsContainer.classList.add('d-none');
+            paymentAmountContainer.classList.remove('d-none');
         } else {
             priceItemsContainer.classList.add('d-none');
+            paymentAmountContainer.classList.add('d-none');
         }
     });
 
@@ -342,13 +362,45 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!hasSelection) {
                 e.preventDefault();
                 alert('En az bir ürün/hizmet seçmelisiniz.');
+                return;
             }
+            
+            // Seçili ürünlerin required özelliğini ayarla
+            items.forEach(select => {
+                if (select.value) {
+                    select.setAttribute('required', 'required');
+                    select.closest('.price-item').querySelector('.quantity-input').setAttribute('required', 'required');
+                }
+            });
+            
+            // Ödeme alanını devre dışı bırak
+            document.getElementById('payment_amount').removeAttribute('required');
+            
+        } else if (typeSelect.value === 'payment') {
+            const paymentAmount = document.getElementById('payment_amount').value;
+            if (!paymentAmount || paymentAmount <= 0) {
+                e.preventDefault();
+                alert('Lütfen geçerli bir ödeme tutarı giriniz.');
+                return;
+            }
+            
+            // Ödeme alanını required yap
+            document.getElementById('payment_amount').setAttribute('required', 'required');
+            
+            // Ürün seçimlerini devre dışı bırak
+            document.querySelectorAll('.price-select, .quantity-input').forEach(element => {
+                element.removeAttribute('required');
+            });
         }
     });
 
     // Sayfa yüklendiğinde mevcut durumu kontrol et
     if (typeSelect.value === 'debt') {
         priceItemsContainer.classList.remove('d-none');
+        paymentAmountContainer.classList.add('d-none');
+    } else if (typeSelect.value === 'payment') {
+        priceItemsContainer.classList.add('d-none');
+        paymentAmountContainer.classList.remove('d-none');
     }
 });
 </script>

@@ -48,24 +48,24 @@
                                 @endif
                             </div>
                         </div>
-
-                        <div class="col-12">
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-header bg-white py-3">
-                                    <h6 class="mb-0 text-primary">Fatura Kalemleri</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead class="table-light">
+                        @if($invoice->type == "debt")
+                            <div class="col-12">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-white py-3">
+                                        <h6 class="mb-0 text-primary">Fatura Kalemleri</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead class="table-light">
                                                 <tr>
                                                     <th>Ürün/Hizmet</th>
                                                     <th>Miktar</th>
                                                     <th>Birim Fiyat</th>
                                                     <th class="text-end">Toplam</th>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
+                                                </thead>
+                                                <tbody>
                                                 @foreach($invoice->items as $item)
                                                     <tr>
                                                         <td>{{ $item->price->name }}</td>
@@ -74,18 +74,26 @@
                                                         <td class="text-end">{{ number_format($item->total, 2) }} ₺</td>
                                                     </tr>
                                                 @endforeach
-                                            </tbody>
-                                            <tfoot class="table-light">
+                                                </tbody>
+                                                <tfoot class="table-light">
                                                 <tr>
                                                     <td colspan="3" class="text-end"><strong>Genel Toplam:</strong></td>
                                                     <td class="text-end"><strong class="text-primary">{{ number_format($invoice->total_amount, 2) }} ₺</strong></td>
                                                 </tr>
-                                            </tfoot>
-                                        </table>
+                                                </tfoot>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="d-flex">
+                                <span class="text-end"><strong>Alınan Tutar:</strong></span>
+                                <span class="text-end mx-4"><strong class="text-primary">{{ number_format($invoice->total_amount, 2) }} ₺</strong></span>
+                            </div>
+
+                        @endif
+
 
                         @if($invoice->description)
                             <div class="col-12">
