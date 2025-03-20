@@ -78,6 +78,22 @@
                     </div>
                     @endif
                 </div>
+
+                <div class="col-12">
+                    <h6>Faturalar</h6>
+                    @if($task->invoices()->count() >= 1)
+                        <ul class="list-group mb-4">
+                            @foreach($task->invoices as $invoice)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>Fatura No: {{ $invoice->invoice_no }} - Tarih: {{ $invoice->created_at->format('d.m.Y') }}</span>
+                                    <a href="{{ route('admin.invoices.show', $invoice) }}" class="btn btn-sm btn-outline-primary">Görüntüle</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p class="text-muted">Bu göreve ait fatura bulunmamaktadır.</p>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

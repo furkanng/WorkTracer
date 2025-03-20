@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SecretaryController;
 use App\Http\Controllers\Admin\PriceListController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\InvoiceController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -38,6 +39,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/customers/{customer}/transactions', [CustomerController::class, 'storeTransaction'])
         ->name('customers.transactions.store');
     Route::resource('tasks', TaskController::class);
+    Route::resource('invoices', InvoiceController::class)->only(['show']);
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/{user}', [MessageController::class, 'show'])->name('messages.show');
     Route::post('/messages/{user}', [MessageController::class, 'store'])->name('messages.store');

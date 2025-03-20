@@ -48,4 +48,9 @@ class Task extends Model
     {
         return $this->belongsTo(Brand::class);
     }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class,"task_id","id");
+    }
 } 
