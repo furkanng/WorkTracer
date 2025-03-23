@@ -79,12 +79,6 @@
                                     <i class="bi bi-eye"></i>
                                     <span class="d-none d-md-inline">Detay</span>
                                 </a>
-                                <a href="{{ route('technician.tasks.edit', $task) }}"
-                                    class="btn btn-sm btn-success"
-                                    title="İşlemler">
-                                    <i class="bi bi-currency-exchange"></i>
-                                    <span class="d-none d-md-inline">İşlemler</span>
-                                </a>
                             </div>
                         </td>
                     </tr>
