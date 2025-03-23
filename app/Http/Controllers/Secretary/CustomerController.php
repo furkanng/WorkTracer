@@ -7,7 +7,11 @@ use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\PriceList;
 use App\Models\Transaction;
+use App\Models\User;
+use App\Mail\TransactionCreated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class CustomerController extends Controller
 {
@@ -134,7 +138,6 @@ class CustomerController extends Controller
         if ($validated['type'] === 'debt') {
             $customer->balance += $request->total_amount;
         } else {
-
             $invoice = new Invoice();
             $invoice->customer_id = $customer->id;
             $invoice->task_id = request('task_id'); // Eğer task detay sayfasından geliyorsa
@@ -148,6 +151,17 @@ class CustomerController extends Controller
             $customer->balance -= $request->amount;
         }
         $customer->save();
+
+        // Admin kullanıcılarına mail gönder
+        try {
+            $transaction->load('customer'); // İlişkiyi yükle
+            $admins = User::where('role_id', 1)->get(); // role_id 1 adminler için
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new TransactionCreated($transaction, $validated['type']));
+            }
+        } catch (\Exception $e) {
+            Log::info(["furkan", $e->getMessage()]);
+        }
 
         return redirect()->back()->with('success', 'İşlem başarıyla kaydedildi.');
     }
