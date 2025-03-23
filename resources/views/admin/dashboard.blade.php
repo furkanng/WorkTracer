@@ -184,11 +184,152 @@
                 </div>
             
                 @yield('content')
+
+                @if(request()->routeIs('admin.dashboard'))
+                <!-- İstatistik Kartları -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Toplam Müşteri</h5>
+                                <h2 class="card-text">{{ $totalCustomers ?? 0 }}</h2>
+                                <p class="card-text mb-0">
+                                    <small>Son 30 günde: {{ $newCustomers ?? 0 }} yeni</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Aktif Görevler</h5>
+                                <h2 class="card-text">{{ $activeTasks ?? 0 }}</h2>
+                                <p class="card-text mb-0">
+                                    <small>Bekleyen: {{ $pendingTasks ?? 0 }}</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Toplam Teknisyen</h5>
+                                <h2 class="card-text">{{ $totalTechnicians ?? 0 }}</h2>
+                                <p class="card-text mb-0">
+                                    <small>Aktif: {{ $activeTechnicians ?? 0 }}</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grafikler -->
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Aylık Görev İstatistikleri</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="taskChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Görev Durumları</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="taskStatusChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Son Aktiviteler -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Son Görevler</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Görev ID</th>
+                                                <th>Müşteri</th>
+                                                <th>Durum</th>
+                                                <th>Tarih</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($recentTasks ?? [] as $task)
+                                            <tr>
+                                                <td>#{{ $task->id }}</td>
+                                                <td>{{ $task->customer_name }}</td>
+                                                <td>
+                                                    <span class="badge bg-{{ $task->status_color }}">
+                                                        {{ $task->status }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ $task->created_at->format('d.m.Y H:i') }}</td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="4" class="text-center">Henüz görev bulunmuyor</td>
+                                            </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Son Mesajlar</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Gönderen</th>
+                                                <th>Konu</th>
+                                                <th>Tarih</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($recentMessages ?? [] as $message)
+                                            <tr>
+                                                <td>{{ $message->sender_name }}</td>
+                                                <td>{{ Str::limit($message->subject, 30) }}</td>
+                                                <td>{{ $message->created_at->format('d.m.Y H:i') }}</td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="3" class="text-center">Henüz mesaj bulunmuyor</td>
+                                            </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @endif
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
     function toggleSidebar() {
         document.querySelector('.sidebar').classList.toggle('show');
@@ -202,6 +343,47 @@
                 toggleSidebar();
             }
         });
+    });
+
+    // Görev İstatistikleri Grafiği
+    const taskCtx = document.getElementById('taskChart').getContext('2d');
+    new Chart(taskCtx, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($monthlyTaskLabels ?? []) !!},
+            datasets: [{
+                label: 'Tamamlanan Görevler',
+                data: {!! json_encode($monthlyTaskData ?? []) !!},
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Görev Durumları Grafiği
+    const taskStatusCtx = document.getElementById('taskStatusChart').getContext('2d');
+    new Chart(taskStatusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {!! json_encode($taskStatusLabels ?? []) !!},
+            datasets: [{
+                data: {!! json_encode($taskStatusData ?? []) !!},
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
     });
     </script>
     @stack('scripts')

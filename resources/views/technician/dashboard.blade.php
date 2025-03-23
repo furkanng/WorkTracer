@@ -154,11 +154,108 @@
                 </div>
 
                 @yield('content')
+
+                @if(request()->routeIs('technician.dashboard'))
+                    <!-- İstatistik Kartları -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Aktif Görevlerim</h5>
+                                    <h2 class="card-text">{{ $activeTasks ?? 0 }}</h2>
+                                    <p class="card-text mb-0">
+                                        <small>Bu ay tamamlanan: {{ $completedThisMonth ?? 0 }}</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Bekleyen Görevler</h5>
+                                    <h2 class="card-text">{{ $pendingTasks ?? 0 }}</h2>
+                                    <p class="card-text mb-0">
+                                        <small>Toplam: {{ $totalTasks ?? 0 }}</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grafikler -->
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Aylık Performansım</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="performanceChart" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Görev Durumlarım</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="taskStatusChart" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Son Aktiviteler -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Güncel Görevlerim</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Görev ID</th>
+                                                    <th>Müşteri</th>
+                                                    <th>Durum</th>
+                                                    <th>Tarih</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($recentTasks ?? [] as $task)
+                                                    <tr>
+                                                        <td>#{{ $task->id }}</td>
+                                                        <td>{{ $task->customer_name }}</td>
+                                                        <td>
+                                                            <span class="badge bg-{{ $task->status_color }}">
+                                                                {{ $task->status }}
+                                                            </span>
+                                                        </td>
+                                                        <td>{{ $task->created_at->format('d.m.Y H:i') }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="4" class="text-center">Henüz görev bulunmuyor</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.toggle('show');
@@ -171,6 +268,47 @@
                     toggleSidebar();
                 }
             });
+        });
+
+        // Performans Grafiği
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(performanceCtx, {
+            type: 'line',
+            data: {
+                labels: {!! json_encode($monthlyLabels ?? []) !!},
+                datasets: [{
+                    label: 'Tamamlanan Görevler',
+                    data: {!! json_encode($monthlyData ?? []) !!},
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Görev Durumları Grafiği
+        const taskStatusCtx = document.getElementById('taskStatusChart').getContext('2d');
+        new Chart(taskStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {!! json_encode($taskStatusLabels ?? []) !!},
+                datasets: [{
+                    data: {!! json_encode($taskStatusData ?? []) !!},
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
         });
     </script>
     @stack('scripts')

@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86ac93ea-d0b2-4601-979f-f4f8657a7100" name="Changes" comment="teknisyen ödeme işlemleri bitti">
+    <list default="true" id="86ac93ea-d0b2-4601-979f-f4f8657a7100" name="Changes" comment="mail işlemleri bitti">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Secretary/CustomerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Secretary/CustomerController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Technician/TaskController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Technician/TaskController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Transaction.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Transaction.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Technician/MessageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Technician/MessageController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/dashboard.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/dashboard.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/technician/dashboard.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/technician/dashboard.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/technician/messages/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/technician/messages/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -184,7 +186,7 @@
       <option name="presentableId" value="Default" />
       <updated>1740944724244</updated>
       <workItem from="1740944725680" duration="3263000" />
-      <workItem from="1741272822489" duration="14225000" />
+      <workItem from="1741272822489" duration="15348000" />
     </task>
     <task id="LOCAL-00001" summary="refactor customer">
       <option name="closed" value="true" />
@@ -242,7 +244,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742761042562</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="mail işlemleri bitti">
+      <option name="closed" value="true" />
+      <created>1742761888695</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1742761888695</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -257,6 +267,7 @@
     <MESSAGE value="admin ödeme işlemleri bitti" />
     <MESSAGE value="sekreter ödeme işlemleri bitti" />
     <MESSAGE value="teknisyen ödeme işlemleri bitti" />
-    <option name="LAST_COMMIT_MESSAGE" value="teknisyen ödeme işlemleri bitti" />
+    <MESSAGE value="mail işlemleri bitti" />
+    <option name="LAST_COMMIT_MESSAGE" value="mail işlemleri bitti" />
   </component>
 </project>

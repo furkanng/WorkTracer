@@ -14,7 +14,7 @@ class MessageController extends Controller
     public function index()
     {
         $users = User::query()->whereNot('id', auth()->id())->get();
-        return view('secretary.messages.index', compact('users'));
+        return view('technician.messages.index', compact('users'));
     }
 
     public function show(User $user)

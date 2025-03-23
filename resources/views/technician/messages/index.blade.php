@@ -15,7 +15,7 @@
                     {{ $user->name }}
                 </a>
                 @php
-                    $unreadCount = $admin->receivedMessages()->where('sender_id', $user->id)->where('is_read', false)->count();
+                    $unreadCount = $user->receivedMessages()->where('sender_id', $user->id)->where('is_read', false)->count();
                 @endphp
                 @if($unreadCount > 0)
                 <span class="badge bg-danger rounded-pill">{{ $unreadCount }}</span>

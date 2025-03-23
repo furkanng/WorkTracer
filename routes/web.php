@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SecretaryController;
 use App\Http\Controllers\Admin\PriceListController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\DashboardController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -31,9 +32,7 @@ Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout
 
 // Admin routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     Route::resource('customers', CustomerController::class);
     Route::post('/customers/{customer}/transactions', [CustomerController::class, 'storeTransaction'])
@@ -52,9 +51,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 // Technician routes
 Route::middleware(['auth', 'role:technician'])->prefix('technician')->name('technician.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('technician.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\Technician\DashboardController::class, 'index'])->name('dashboard');
     
     Route::get('/tasks', [TechnicianTaskController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/{task}', [TechnicianTaskController::class, 'show'])->name('tasks.show');
