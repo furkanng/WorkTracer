@@ -43,4 +43,9 @@ class Customer extends Model
         $payments = $this->transactions()->where('type', 'payment')->sum('amount');
         return $debts - $payments;
     }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class,"customer_id","id");
+    }
 } 

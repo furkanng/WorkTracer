@@ -76,7 +76,12 @@ class CustomerController extends Controller
 
     public function show(Customer $customer)
     {
-        return view('admin.customers.show', compact('customer'));
+        $invoices = $customer->invoices()
+            ->with(['items.price', 'user'])
+            ->latest()
+            ->paginate(10);
+            
+        return view('admin.customers.show', compact('customer', 'invoices'));
     }
 
     public function storeTransaction(Request $request, Customer $customer)

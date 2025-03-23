@@ -39,4 +39,9 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceItem::class);
     }
+
+    public function user()
+    {
+        return $this->hasOneThrough(User::class, Transaction::class, 'id', 'id', 'transaction_id', 'user_id');
+    }
 } 

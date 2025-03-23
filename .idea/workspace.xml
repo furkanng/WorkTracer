@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86ac93ea-d0b2-4601-979f-f4f8657a7100" name="Changes" comment="admin fatura oluşturma eklendi">
+    <list default="true" id="86ac93ea-d0b2-4601-979f-f4f8657a7100" name="Changes" comment="admin ödeme alma bitti">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/CustomerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/CustomerController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Customer.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Customer.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/Invoice.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Invoice.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2024_03_03_000007_create_invoices_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2024_03_03_000007_create_invoices_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/invoices/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/invoices/show.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/tasks/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/tasks/show.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/customers/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/customers/show.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,7 +185,7 @@
       <option name="presentableId" value="Default" />
       <updated>1740944724244</updated>
       <workItem from="1740944725680" duration="3263000" />
-      <workItem from="1741272822489" duration="9371000" />
+      <workItem from="1741272822489" duration="12512000" />
     </task>
     <task id="LOCAL-00001" summary="refactor customer">
       <option name="closed" value="true" />
@@ -212,7 +211,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742497646050</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="admin ödeme alma bitti">
+      <option name="closed" value="true" />
+      <created>1742500322578</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1742500322578</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,6 +230,7 @@
     <MESSAGE value="refactor customer" />
     <MESSAGE value="ufak hatalar düzeltildi" />
     <MESSAGE value="admin fatura oluşturma eklendi" />
-    <option name="LAST_COMMIT_MESSAGE" value="admin fatura oluşturma eklendi" />
+    <MESSAGE value="admin ödeme alma bitti" />
+    <option name="LAST_COMMIT_MESSAGE" value="admin ödeme alma bitti" />
   </component>
 </project>
